@@ -8,10 +8,11 @@
  *
  * You are encouraged to use STL container types as an underlying storage mechanism for the grid cells.
  *
- * @author YOUR_STUDENT_NUMBER
+ * @author 950530
  * @date March, 2020
  */
 #include "grid.h"
+#include <algorithm>
 
 // Include the minimal number of headers needed to support your implementation.
 // #include ...
@@ -28,7 +29,7 @@
  *      Grid grid;
  *
  */
-
+Grid::Grid() : Grid(0) {}
 
 /**
  * Grid::Grid(square_size)
@@ -53,7 +54,7 @@
  * @param square_size
  *      The edge size to use for the width and height of the grid.
  */
-
+Grid::Grid(int square_size) : Grid(square_size, square_size) {}
 
 /**
  * Grid::Grid(width, height)
@@ -71,7 +72,11 @@
  * @param height
  *      The height of the grid.
  */
-
+Grid::Grid(int width, int height) {
+this->width = width;
+this->height = height;
+this->grid = std::vector<Cell>(width*height, Cell::DEAD);
+}
 
 /**
  * Grid::get_width()
@@ -96,7 +101,9 @@
  * @return
  *      The width of the grid.
  */
-
+int Grid::get_width() const {
+    return width;
+}
 
 /**
  * Grid::get_height()
@@ -121,7 +128,9 @@
  * @return
  *      The height of the grid.
  */
-
+int Grid::get_height () const {
+    return height;
+}
 
 /**
  * Grid::get_total_cells()
@@ -146,7 +155,9 @@
  * @return
  *      The number of total cells.
  */
-
+int Grid::get_total_cells() const {
+    return grid.size();
+}
 
 /**
  * Grid::get_alive_cells()
@@ -171,7 +182,9 @@
  * @return
  *      The number of alive cells.
  */
-
+int Grid::get_alive_cells() const {
+    return std::count(grid.begin(), grid.end(), Cell::ALIVE);
+}
 
 /**
  * Grid::get_dead_cells()
@@ -196,7 +209,9 @@
  * @return
  *      The number of dead cells.
  */
-
+int Grid::get_dead_cells() const {
+    return std::count(grid.begin(), grid.end(), Cell::DEAD);
+}
 
 /**
  * Grid::resize(square_size)
@@ -255,7 +270,11 @@
  * @return
  *      The 1d offset from the start of the data array where the desired cell is located.
  */
-
+ /**
+int Grid::get_index(int x, int y) const {
+    return (x + (y * width));
+}
+  */
 
 /**
  * Grid::get(x, y)
