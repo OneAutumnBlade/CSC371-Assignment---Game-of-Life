@@ -230,7 +230,13 @@ int Grid::get_dead_cells() const {
  * @param square_size
  *      The new edge size for both the width and height of the grid.
  */
+void Grid::resize(int square_size) {
+    std::vector<Cell> new_grid(square_size*square_size, Cell::DEAD);
 
+    this->grid = new_grid;
+    this->width = square_size;
+    this->height = square_size;
+}
 
 /**
  * Grid::resize(width, height)
@@ -252,7 +258,13 @@ int Grid::get_dead_cells() const {
  * @param new_height
  *      The new height for the grid.
  */
+void Grid::resize(int width, int height) {
+    std::vector<Cell> new_grid(width*height, Cell::DEAD);
 
+    this->grid = new_grid;
+    this->width = width;
+    this->height = height;
+}
 
 /**
  * Grid::get_index(x, y)
@@ -270,11 +282,11 @@ int Grid::get_dead_cells() const {
  * @return
  *      The 1d offset from the start of the data array where the desired cell is located.
  */
- /**
+
 int Grid::get_index(int x, int y) const {
     return (x + (y * width));
 }
-  */
+
 
 /**
  * Grid::get(x, y)

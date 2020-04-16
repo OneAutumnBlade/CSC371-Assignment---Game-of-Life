@@ -40,18 +40,17 @@ public:
     int get_total_cells() const;
     int get_alive_cells() const;
     int get_dead_cells() const;
+    void resize(int square_size);
+    void resize(int width, int height);
+    Cell get(int x, int y);
+    void set(int x, int y, Cell value);
     /**
-    void resize(square_size);
-    void resize(width, height);
-    int get_index(int x, int y) const;
-    Cell get(x, y);
-    set(x, y, value);
     operator()(x, y);
     operator()(x, y);
     crop(x0, y0, x1, y1);
     merge(other, x0, y0, alive_only = false);
     rotate(rotation);
     operator<<(output_stream, grid);
-     */
+**/
 
 };
