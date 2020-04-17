@@ -13,6 +13,7 @@
  */
 #include "grid.h"
 #include <algorithm>
+#include <stdexcept>
 
 // Include the minimal number of headers needed to support your implementation.
 // #include ...
@@ -233,6 +234,14 @@ int Grid::get_dead_cells() const {
 void Grid::resize(int square_size) {
     std::vector<Cell> new_grid(square_size*square_size, Cell::DEAD);
 
+    for(int x = 0; x < square_size; x++) {
+        for(int y = 0; y < square_size; y++) {
+            if(x < width && y < height){
+                new_grid[x + (y * square_size)] = grid[get_index(x, y)];
+            }
+        }
+    }
+
     this->grid = new_grid;
     this->width = square_size;
     this->height = square_size;
@@ -258,12 +267,20 @@ void Grid::resize(int square_size) {
  * @param new_height
  *      The new height for the grid.
  */
-void Grid::resize(int width, int height) {
-    std::vector<Cell> new_grid(width*height, Cell::DEAD);
+void Grid::resize(int new_width, int new_height) {
+    std::vector<Cell> new_grid(new_width*new_height, Cell::DEAD);
+
+    for(int x = 0; x < new_width; x++) {
+        for(int y = 0; y < new_height; y++) {
+            if(x < width && y < height){
+                new_grid[x + (y * new_width)] = grid[get_index(x, y)];
+            }
+        }
+    }
 
     this->grid = new_grid;
-    this->width = width;
-    this->height = height;
+    this->width = new_width;
+    this->height = new_height;
 }
 
 /**
@@ -282,7 +299,6 @@ void Grid::resize(int width, int height) {
  * @return
  *      The 1d offset from the start of the data array where the desired cell is located.
  */
-
 int Grid::get_index(int x, int y) const {
     return (x + (y * width));
 }
@@ -316,7 +332,9 @@ int Grid::get_index(int x, int y) const {
  * @throws
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
-
+Cell Grid::get(int x, int y) const {
+    return grid[get_index(x, y)];
+}
 
 /**
  * Grid::set(x, y, value)
@@ -344,7 +362,9 @@ int Grid::get_index(int x, int y) const {
  * @throws
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
-
+void Grid::set(int x, int y, Cell value) {
+    grid[get_index(x, y)] = value;
+}
 
 /**
  * Grid::operator()(x, y)
@@ -381,7 +401,12 @@ int Grid::get_index(int x, int y) const {
  * @throws
  *      std::runtime_error or sub-class if x,y is not a valid coordinate within the grid.
  */
-
+Cell& Grid::operator()(int x, int y) {
+    if(x > width || y > height || x < 0 || y < 0) {
+        throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
+    }
+    return grid[get_index(x, y)];
+}
 
 /**
  * Grid::operator()(x, y)
@@ -413,6 +438,12 @@ int Grid::get_index(int x, int y) const {
  * @throws
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
+const Cell& Grid::operator()(int x, int y) const {
+    if(x > width || y > height || x < 0 || y < 0) {
+        throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
+    }
+    return grid[get_index(x, y)];
+}
 
 
 /**
