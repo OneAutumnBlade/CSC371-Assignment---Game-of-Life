@@ -333,6 +333,9 @@ int Grid::get_index(int x, int y) const {
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
 Cell Grid::get(int x, int y) const {
+    if(x > width || y > height || x < 0 || y < 0) {
+        throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
+    }
     return grid[get_index(x, y)];
 }
 
@@ -363,6 +366,11 @@ Cell Grid::get(int x, int y) const {
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
 void Grid::set(int x, int y, Cell value) {
+    /**
+    if(x > width || y > height || x < 0 || y < 0) {
+        throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
+    }
+     **/
     grid[get_index(x, y)] = value;
 }
 
@@ -480,7 +488,26 @@ const Cell& Grid::operator()(int x, int y) const {
  *      std::exception or sub-class if x0,y0 or x1,y1 are not valid coordinates within the grid
  *      or if the crop window has a negative size.
  */
+Grid Grid::crop(int x0, int y0, int x1, int y1) {
+    //Checks if xo,y0,x1,y1 are valid coordinates
+    if(x0 < 0 || y0 < 0 || x1 > width || y1 > width){
+        //Checks if crops window is negative
+        if(x0 > x1 || y0 >  y1){
+            throw(std::runtime_error("The co-ordinates you have entered are out of bounds, or create a negative crop window"));
+        }
+    }
 
+    Grid crop_grid = Grid((x1 - x0), (y1 - y0));
+    for(int x = x0; x < x1; x++) {
+        for(int y = y0; y < y1; y++) {
+            if(get(x, y) == Cell::ALIVE){
+                crop_grid.set(x-x0, y-y0, (get(x, y)));
+            }
+
+        }
+    }
+    return crop_grid;
+}
 
 /**
  * Grid::merge(other, x0, y0, alive_only = false)

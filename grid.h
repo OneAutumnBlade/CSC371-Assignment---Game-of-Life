@@ -32,7 +32,7 @@ private:
     int height;
 public:
     Grid();
-    Grid(int square_size);
+    explicit Grid(int square_size);
     Grid(int width, int height);
 
     int get_width() const;
@@ -46,8 +46,8 @@ public:
     void set(int x, int y, Cell value);
     Cell& operator()(int x, int y);
     const Cell& operator()(int x, int y)const;
-    /**
-    crop(x0, y0, x1, y1);
+    Grid crop(int x0, int y0, int x1, int y1);
+     /**
     merge(other, x0, y0, alive_only = false);
     rotate(rotation);
     operator<<(output_stream, grid);
