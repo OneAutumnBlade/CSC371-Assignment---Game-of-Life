@@ -13,6 +13,7 @@
 // Add the minimal number of includes you need in order to declare the class.
 // #include ...
 #include <vector>
+#include <ostream>
 /**
  * A Cell is a char limited to two named values for Cell::DEAD and Cell::ALIVE.
  */
@@ -49,6 +50,6 @@ public:
     Grid crop(int x0, int y0, int x1, int y1);
     void merge(Grid other, int x0, int y0, bool alive_only = false);
     Grid rotate(int rotation);
-    //operator<<(output_stream, grid);
+    friend std::ostream& operator<<(std::ostream& output_stream, const Grid& grid);
 
 };
