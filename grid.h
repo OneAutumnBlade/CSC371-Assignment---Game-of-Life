@@ -48,9 +48,7 @@ public:
     const Cell& operator()(int x, int y)const;
     Grid crop(int x0, int y0, int x1, int y1);
     void merge(Grid other, int x0, int y0, bool alive_only = false);
-    /**
-    rotate(rotation);
-    operator<<(output_stream, grid);
-**/
+    Grid rotate(int rotation);
+    //operator<<(output_stream, grid);
 
 };

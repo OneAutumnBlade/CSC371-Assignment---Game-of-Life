@@ -14,6 +14,7 @@
 #include "grid.h"
 #include <algorithm>
 #include <stdexcept>
+#include <cstdlib>
 
 // Include the minimal number of headers needed to support your implementation.
 // #include ...
@@ -333,10 +334,11 @@ int Grid::get_index(int x, int y) const {
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
 Cell Grid::get(int x, int y) const {
+    //Check if x,y are valid co-ordinates
     if(x > width || y > height || x < 0 || y < 0) {
         throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
     }
-    return grid[get_index(x, y)];
+    return operator()(x, y);
 }
 
 /**
@@ -366,10 +368,11 @@ Cell Grid::get(int x, int y) const {
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
 void Grid::set(int x, int y, Cell value) {
+    //Check if x,y are valid co-ordinates
     if(x > width || y > height || x < 0 || y < 0) {
         throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
     }
-    grid[get_index(x, y)] = value;
+    operator()(x, y) = value;
 }
 
 /**
@@ -408,6 +411,7 @@ void Grid::set(int x, int y, Cell value) {
  *      std::runtime_error or sub-class if x,y is not a valid coordinate within the grid.
  */
 Cell& Grid::operator()(int x, int y) {
+    //Check if x,y are valid co-ordinates
     if(x > width || y > height || x < 0 || y < 0) {
         throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
     }
@@ -445,6 +449,7 @@ Cell& Grid::operator()(int x, int y) {
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
 const Cell& Grid::operator()(int x, int y) const {
+    //Check if x,y are valid co-ordinates
     if(x > width || y > height || x < 0 || y < 0) {
         throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
     }
@@ -545,15 +550,20 @@ Grid Grid::crop(int x0, int y0, int x1, int y1) {
  *      std::exception or sub-class if the other grid being placed does not fit within the bounds of the current grid.
  */
 void Grid::merge(Grid other, int x0, int y0, bool alive_only) {
+    //Check if Grid other is larger that base grid
     if(other.get_width() > width || other.get_height() > height) {
         throw(std::runtime_error("The grid you are overlaying is larger than the base grid"));
     }
     for(int x = x0; x < x0 + other.get_width(); x++) {
         for(int y = y0; y < y0 + other.get_height(); y++) {
+            //Checks if alive_only is true
             if(alive_only){
+                //If alive_only is true, check if current Cell is alive
                 if(other.get(x - x0, y - y0) == Cell::ALIVE){
+                    //If cell is alive, set cell into base grid, else ignore it
                     set(x, y, other.get(x - x0, y - y0));
                 }
+
             }else {
                 set(x, y, other.get(x - x0, y - y0));
             }
@@ -583,7 +593,28 @@ void Grid::merge(Grid other, int x0, int y0, bool alive_only) {
  * @return
  *      Returns a copy of the grid that has been rotated.
  */
+Grid Grid::rotate(int rotation) {
+    //Converts rotations into integers of 0-3, so it can be implemented by only going clockwise
+    int temp_rotation = std::abs(rotation % 4 + 4) % 4;
+    Grid temp_grid = *this;
+    Grid rotated_grid;
 
+    for(int r = 0; r < temp_rotation; r++) {
+        rotated_grid = Grid(temp_grid.get_height(), temp_grid.get_width());
+        for(int x = 0; x < temp_grid.get_width(); x++ ) {
+            for(int y = 0; y < temp_grid.get_height(); y++ ) {
+                rotated_grid.set(temp_grid.get_height()-y-1, x, temp_grid.get(x,y));
+            }
+        }
+        temp_grid = rotated_grid;
+    }
+    //Checks if the input rotation is 0
+    if(temp_rotation == 0) {
+        //If it is 0, set the output grid to be the current grid
+        rotated_grid = temp_grid;
+    }
+    return rotated_grid;
+}
 
 /**
  * operator<<(output_stream, grid)
