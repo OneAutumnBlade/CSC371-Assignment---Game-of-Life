@@ -366,11 +366,9 @@ Cell Grid::get(int x, int y) const {
  *      std::exception or sub-class if x,y is not a valid coordinate within the grid.
  */
 void Grid::set(int x, int y, Cell value) {
-    /**
     if(x > width || y > height || x < 0 || y < 0) {
         throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
     }
-     **/
     grid[get_index(x, y)] = value;
 }
 
@@ -546,7 +544,22 @@ Grid Grid::crop(int x0, int y0, int x1, int y1) {
  * @throws
  *      std::exception or sub-class if the other grid being placed does not fit within the bounds of the current grid.
  */
-
+void Grid::merge(Grid other, int x0, int y0, bool alive_only) {
+    if(other.get_width() > width || other.get_height() > height) {
+        throw(std::runtime_error("The grid you are overlaying is larger than the base grid"));
+    }
+    for(int x = x0; x < x0 + other.get_width(); x++) {
+        for(int y = y0; y < y0 + other.get_height(); y++) {
+            if(alive_only){
+                if(other.get(x - x0, y - y0) == Cell::ALIVE){
+                    set(x, y, other.get(x - x0, y - y0));
+                }
+            }else {
+                set(x, y, other.get(x - x0, y - y0));
+            }
+        }
+    }
+}
 
 /**
  * Grid::rotate(rotation)
