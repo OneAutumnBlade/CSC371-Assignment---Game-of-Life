@@ -265,7 +265,9 @@ int World::get_dead_cells() const {
  * @return
  *      A reference to the current state.
  */
-
+Grid World::get_state() const {
+    return current;
+}
 
 /**
  * World::resize(square_size)
@@ -286,7 +288,11 @@ int World::get_dead_cells() const {
  * @param square_size
  *      The new edge size for both the width and height of the grid.
  */
-
+void World::resize(int square_size) {
+    this-> current.resize(square_size);
+    this-> width = square_size;
+    this-> height = square_size;
+}
 
 /**
  * World::resize(new_width, new_height)
@@ -310,7 +316,11 @@ int World::get_dead_cells() const {
  * @param new_height
  *      The new height for the grid.
  */
-
+void World::resize(int new_width, int new_height) {
+    this-> current.resize(new_width, new_height);
+    this-> width = new_width;
+    this-> height = new_height;
+}
 
 /**
  * World::count_neighbours(x, y, toroidal)
