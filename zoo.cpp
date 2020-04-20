@@ -149,6 +149,9 @@ Grid Zoo::light_weight_spaceship() {
  */
 Grid Zoo::load_ascii(std::string path) {
     std::ifstream input(path);
+    if(input.fail()){
+        throw(std::ios_base::failure("File cannot be opened"));
+    }
     std::string line;
     int counter = 0;
     int width;
@@ -160,10 +163,16 @@ Grid Zoo::load_ascii(std::string path) {
             const size_t pos = line.find(' ');
             width = atoi(line.substr(0, pos).c_str());
             height = atoi(line.substr(pos +1, pos).c_str());
+            if(width < 0 || height < 0) {
+                throw(std::runtime_error("Width or height is negative"));
+            }
             grid = Grid(width, height);
             counter++;
         }else {
             for(unsigned int x = 0; x < line.length()-1; x++) {
+                if(line[x] != ' ' && line [x] != '#') {
+                    throw(std::runtime_error("Invalid cell characters"));
+                }
                 if(line[x] == '#') {
                     grid.set(x, y, Cell::ALIVE);
 
