@@ -336,7 +336,7 @@ int Grid::get_index(int x, int y) const {
 Cell Grid::get(int x, int y) const {
     //Check if x,y are valid co-ordinates
     if(x > width || y > height || x < 0 || y < 0) {
-        throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
+        throw(std::runtime_error("Thea co-ordinates you have entered are out of bounds"));
     }
     return operator()(x, y);
 }
@@ -493,13 +493,13 @@ const Cell& Grid::operator()(int x, int y) const {
  */
 Grid Grid::crop(int x0, int y0, int x1, int y1) {
     //Checks if xo,y0,x1,y1 are valid coordinates
-    if(x0 < 0 || y0 < 0 || x1 > width || y1 > width){
-        //Checks if crops window is negative
-        if(x0 > x1 || y0 >  y1){
-            throw(std::runtime_error("The co-ordinates you have entered are out of bounds, or create a negative crop window"));
-        }
+    if(x0 < 0 || y0 < 0 || x1 > width || y1 > height){
+        throw(std::runtime_error("The co-ordinates you have entered are out of bounds"));
     }
-
+    //Checks if crops window is negative
+    if(x0 > x1 || y0 >  y1){
+        throw(std::runtime_error("The co-ordinates you have entered create a negative crop window"));
+    }
     Grid crop_grid = Grid((x1 - x0), (y1 - y0));
     for(int x = x0; x < x1; x++) {
         for(int y = y0; y < y1; y++) {
@@ -554,6 +554,10 @@ void Grid::merge(Grid other, int x0, int y0, bool alive_only) {
     if(other.get_width() > width || other.get_height() > height) {
         throw(std::runtime_error("The grid you are overlaying is larger than the base grid"));
     }
+    //Checks if input co-ordinates are out of bounds
+    if(x0 < 0 || y0 < 0 || (x0 + width) > width || (y0 + height) > height) {
+        throw(std::runtime_error("The input co-ordinates are out of bounds"));
+    }
     for(int x = x0; x < x0 + other.get_width(); x++) {
         for(int y = y0; y < y0 + other.get_height(); y++) {
             //Checks if alive_only is true
@@ -565,6 +569,7 @@ void Grid::merge(Grid other, int x0, int y0, bool alive_only) {
                 }
 
             }else {
+                //If alive_only is false, cell are overwritten with no further checks
                 set(x, y, other.get(x - x0, y - y0));
             }
         }
@@ -655,11 +660,14 @@ std::ostream& operator<<(std::ostream& output_stream, const Grid& grid) {
     int width = grid.get_width();
     int height = grid.get_height();
 
+    //Outputs the top line of the border
     output_stream << '+';
     for(int i = 0; i < width; i++) {
         output_stream << '-';
     }
     output_stream << '+' << '\n';
+
+    //Output the cells, along with the borders lines of boths ends
     for(int y = 0; y < height; y++){
         output_stream << '|';
         for(int x = 0; x < width; x++){
@@ -672,6 +680,7 @@ std::ostream& operator<<(std::ostream& output_stream, const Grid& grid) {
         output_stream << '|' << '\n';
     }
 
+    //Outputs the bottom line of the border
     output_stream << '+';
     for(int i = 0; i < width; i++) {
         output_stream << '-';
