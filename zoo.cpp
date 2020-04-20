@@ -146,21 +146,35 @@ Grid Zoo::light_weight_spaceship() {
  *          - Newline characters are not found when expected during parsing.
  *          - The character for a cell is not the ALIVE or DEAD character.
  */
- /**
 Grid Zoo::load_ascii(std::string path) {
     std::ifstream input(path);
-    input.open();
-    int width = input.get();
-    int height = input.get();
-    Grid new_grid = Grid(width, height);
-    for(int y = 0; y < height; y++) {
-        for(int x = 0; x < width; x++) {
-            new_grid.set(x, y, input.get);
+    std::string line;
+    int counter = 0;
+    int width;
+    int height;
+    Grid grid;
+    unsigned int y = 0;
+    while(getline(input, line)){
+        if(counter == 0) {
+            const size_t pos = line.find(' ');
+            width = atoi(line.substr(0, pos).c_str());
+            height = atoi(line.substr(pos +1, pos).c_str());
+            grid = Grid(width, height);
+            counter++;
+        }else {
+            for(unsigned int x = 0; x < line.length()-1; x++) {
+                if(line[x] == '#') {
+                    grid.set(x, y, Cell::ALIVE);
+
+                }
+            }
+            y++;
         }
     }
     input.close();
+    return grid;
 }
-**/
+
 /**
  * Zoo::save_ascii(path, grid)
  *
