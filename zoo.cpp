@@ -18,10 +18,11 @@
  *                padded with zero or more 0 bits.
  *              - a 0 bit should be considered Cell::DEAD, a 1 bit should be considered Cell::ALIVE.
  *
- * @author YOUR_STUDENT_NUMBER
+ * @author 950530
  * @date March, 2020
  */
 #include "zoo.h"
+#include <fstream>
 
 // Include the minimal number of headers needed to support your implementation.
 // #include ...
@@ -46,7 +47,15 @@
  * @return
  *      Returns a Grid containing a glider.
  */
-
+Grid Zoo::glider() {
+    Grid glider_grid = Grid(3);
+    glider_grid.set(1, 0, Cell::ALIVE);
+    glider_grid.set(2, 1, Cell::ALIVE);
+    glider_grid.set(0, 2, Cell::ALIVE);
+    glider_grid.set(1, 2, Cell::ALIVE);
+    glider_grid.set(2, 2, Cell::ALIVE);
+    return glider_grid;
+}
 
 /**
  * Zoo::r_pentomino()
@@ -68,7 +77,15 @@
  * @return
  *      Returns a Grid containing a r-pentomino.
  */
-
+Grid Zoo::r_pentomino() {
+    Grid r_pentomino_grid = Grid(3);
+    r_pentomino_grid.set(1, 0, Cell::ALIVE);
+    r_pentomino_grid.set(2, 0, Cell::ALIVE);
+    r_pentomino_grid.set(1, 1, Cell::ALIVE);
+    r_pentomino_grid.set(0, 1, Cell::ALIVE);
+    r_pentomino_grid.set(1, 2, Cell::ALIVE);
+    return r_pentomino_grid;
+}
 
 /**
  * Zoo::light_weight_spaceship()
@@ -91,7 +108,19 @@
  * @return
  *      Returns a grid containing a light weight spaceship.
  */
-
+Grid Zoo::light_weight_spaceship() {
+    Grid spaceship_grid = Grid(5, 4);
+    spaceship_grid.set(1, 0, Cell::ALIVE);
+    spaceship_grid.set(4, 0, Cell::ALIVE);
+    spaceship_grid.set(0, 1, Cell::ALIVE);
+    spaceship_grid.set(0, 2, Cell::ALIVE);
+    spaceship_grid.set(4, 2, Cell::ALIVE);
+    spaceship_grid.set(0, 3, Cell::ALIVE);
+    spaceship_grid.set(1, 3, Cell::ALIVE);
+    spaceship_grid.set(2, 3, Cell::ALIVE);
+    spaceship_grid.set(3, 3, Cell::ALIVE);
+    return spaceship_grid;
+}
 
 /**
  * Zoo::load_ascii(path)
@@ -117,8 +146,21 @@
  *          - Newline characters are not found when expected during parsing.
  *          - The character for a cell is not the ALIVE or DEAD character.
  */
-
-
+ /**
+Grid Zoo::load_ascii(std::string path) {
+    std::ifstream input(path);
+    input.open();
+    int width = input.get();
+    int height = input.get();
+    Grid new_grid = Grid(width, height);
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            new_grid.set(x, y, input.get);
+        }
+    }
+    input.close();
+}
+**/
 /**
  * Zoo::save_ascii(path, grid)
  *
