@@ -21,5 +21,6 @@ namespace Zoo {
     Grid glider();
     Grid r_pentomino();
     Grid light_weight_spaceship();
-   // Grid load_ascii(std::string path);
+    Grid load_ascii(std::string path);
+    void save_ascii(std::string path, Grid grid);
 };
